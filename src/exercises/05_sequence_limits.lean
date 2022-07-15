@@ -61,7 +61,12 @@ variables (u v w : ℕ → ℝ) (l l' : ℝ)
 -- 0033
 example : (∀ n, u n = l) → seq_limit u l :=
 begin
-  sorry
+  intros h ε ε_pos,
+  use 0,
+  intros n hn,
+  rw h,
+  norm_num,
+  linarith
 end
 
 /- When dealing with absolute values, we'll use lemmas:
@@ -80,7 +85,13 @@ hand since they are used in many exercises.
 -- 0034
 example (hl : l > 0) : seq_limit u l → ∃ N, ∀ n ≥ N, u n ≥ l/2 :=
 begin
-  sorry
+  intros hlim,  
+  cases hlim (l/2) (by linarith),
+  use w,
+  intros n hn,
+  specialize h n hn,
+  rw abs_le at h,
+  linarith,  
 end
 
 /- 

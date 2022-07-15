@@ -195,7 +195,10 @@ end
 -- 0025
 example (f g : ℝ → ℝ) (hf : non_decreasing f) (hg : non_increasing g) : non_increasing (g ∘ f) :=
 begin
-  sorry
+  intros x1 x2 h,
+  apply hg,
+  apply hf,
+  exact h,
 end
 
 /-
@@ -236,7 +239,15 @@ end
 -- 0026
 example (x y : ℝ) : x^2 = y^2 → x = y ∨ x = -y :=
 begin
-  sorry
+  intro hyp,
+  have H : (x+y)*(x-y) = 0,
+    calc (x+y)*(x-y) = x^2 - y^2 : by linarith
+         ... = y^2 - y^2 : by rw hyp
+         ... = 0 : by linarith,
+  rw mul_eq_zero at H,
+  cases H with Hx Hy,
+  {right, linarith,},
+  {left, linarith,}
 end
 
 /-
@@ -247,7 +258,17 @@ In the next exercise, we can use:
 -- 0027
 example (f : ℝ → ℝ) : non_decreasing f ↔ ∀ x y, x < y → f x ≤ f y :=
 begin
-  sorry
+  split,
+  intros hyp x y hxy,
+  apply hyp,
+  linarith,
+  intros hyp x y hxy,
+  -- exact monotone_iff_forall_lt.mpr hyp hxy
+  have clef : x = y ∨ x < y, { exact eq_or_lt_of_le hxy},
+  cases clef with heq hlt, 
+  rw heq,
+  apply hyp,
+  exact hlt,  
 end
 
 /-
